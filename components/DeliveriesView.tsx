@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { collection, onSnapshot, query, orderBy, addDoc, updateDoc, deleteDoc, doc, Timestamp } from 'firebase/firestore';
 import { db } from '../services/firebase';
 import type { Delivery } from '../types';
@@ -19,6 +19,7 @@ export default function DeliveriesView() {
   
   const { user } = useAuthContext();
   const isAdmin = user?.email === 'admin@admin.com';
+  const isInitialLoad = useRef(true);
 
   useEffect(() => {
     const q = query(collection(db, 'deliveries'), orderBy('createdAt', 'desc'));
@@ -28,6 +29,23 @@ export default function DeliveriesView() {
         ...doc.data(),
       } as Delivery));
       setDeliveries(deliveriesData);
+
+      if (isInitialLoad.current) {
+        isInitialLoad.current = false;
+      } else {
+        querySnapshot.docChanges().forEach((change) => {
+          if (change.type === "added") {
+            const newDelivery = change.doc.data();
+            if (Notification.permission === 'granted') {
+              new Notification('New Delivery Arrived!', {
+                body: `Invoice #${newDelivery.invoiceNumber}: ${newDelivery.productName} for ${newDelivery.customerName}.`,
+                icon: 'https://www.sardartvpvtltd.com/wp-content/uploads/2025/02/SARDAR-TV-LOGO-1980x929.png'
+              });
+            }
+          }
+        });
+      }
+
       setLoading(false);
     }, (error) => {
       console.error("Error fetching deliveries:", error);

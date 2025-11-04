@@ -1,4 +1,4 @@
-import React, { useState, createContext, useContext } from 'react';
+import React, { useState, createContext, useContext, useEffect } from 'react';
 import { useAuth } from './hooks/useAuth';
 import LoginPage from './components/LoginPage';
 import Header from './components/Header';
@@ -19,6 +19,14 @@ export const useAuthContext = () => useContext(AuthContext);
 export default function App() {
   const { user, loading, logout } = useAuth();
   const [currentView, setCurrentView] = useState<View>('deliveries');
+
+  useEffect(() => {
+    if (user && 'Notification' in window) {
+      if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+        Notification.requestPermission();
+      }
+    }
+  }, [user]);
 
   if (loading) {
     return (
