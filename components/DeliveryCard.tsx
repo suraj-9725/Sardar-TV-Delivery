@@ -23,6 +23,7 @@ interface DeliveryCardProps {
   delivery: Delivery;
   onUpdate: (id: string, data: Partial<Delivery>) => void;
   onDelete: (id: string) => void;
+  isAdmin: boolean;
 }
 
 const statusConfig: Record<DeliveryStatus, { bg: string, text: string, icon: React.FC<React.SVGProps<SVGSVGElement>> }> = {
@@ -96,7 +97,7 @@ const StatusSelector = ({ status, onUpdate }: { status: DeliveryStatus, onUpdate
 };
 
 
-export default function DeliveryCard({ delivery, onUpdate, onDelete }: DeliveryCardProps) {
+export default function DeliveryCard({ delivery, onUpdate, onDelete, isAdmin }: DeliveryCardProps) {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [isImageModalOpen, setImageModalOpen] = useState(false);
@@ -117,7 +118,7 @@ export default function DeliveryCard({ delivery, onUpdate, onDelete }: DeliveryC
           <StatusIcon className="h-6 w-6" />
           <h2 className="text-lg font-bold">{delivery.status}</h2>
         </div>
-        {delivery.status !== DeliveryStatus.DELIVERED && (
+        {(delivery.status !== DeliveryStatus.DELIVERED || isAdmin) && (
           <div className="flex items-center space-x-2">
             <button 
                 onClick={() => setEditModalOpen(true)} 
@@ -184,7 +185,7 @@ export default function DeliveryCard({ delivery, onUpdate, onDelete }: DeliveryC
                 {delivery.status === DeliveryStatus.DELIVERED && delivery.deliveredAt && (
                     <>
                         <p><span className="font-semibold text-green-600">Delivered:</span> {formatDateTime(delivery.deliveredAt)}</p>
-                        {delivery.deliveredBy && (
+                        {isAdmin && delivery.deliveredBy && (
                             <div className="flex items-center gap-1.5 mt-1" title={`Delivered by ${delivery.deliveredBy}`}>
                                 <UserCircleIcon className="h-4 w-4 text-brand-text-light"/>
                                 <p className="text-xs text-brand-text-light truncate">

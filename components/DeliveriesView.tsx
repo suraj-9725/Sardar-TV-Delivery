@@ -18,6 +18,7 @@ export default function DeliveriesView() {
   const [dateFilter, setDateFilter] = useState('');
   
   const { user } = useAuthContext();
+  const isAdmin = user?.email === 'admin@admin.com';
 
   useEffect(() => {
     const q = query(collection(db, 'deliveries'), orderBy('createdAt', 'desc'));
@@ -161,6 +162,7 @@ export default function DeliveriesView() {
                     delivery={delivery}
                     onUpdate={handleUpdateDelivery}
                     onDelete={handleDeleteDelivery}
+                    isAdmin={isAdmin}
                 />
                 ))}
             </div>
