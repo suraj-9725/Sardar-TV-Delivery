@@ -1,4 +1,3 @@
-
 import { Timestamp } from 'firebase/firestore';
 
 export interface User {
@@ -32,6 +31,7 @@ export interface Delivery {
   lastUpdatedBy: string;
   updatedAt: Timestamp;
   deliveredAt?: Timestamp;
+  deliveredBy?: string;
 }
 
 export interface Staff {

@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 type IconProps = React.SVGProps<SVGSVGElement>;
@@ -128,5 +127,11 @@ export const SparklesIcon = (props: IconProps) => (
 export const BuildingStorefrontIcon = (props: IconProps) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 21v-7.5A.75.75 0 0114.25 12h.01a.75.75 0 01.75.75v7.5m0-7.5h2.25a.75.75 0 00.75-.75V7.5M13.5 21h-6v-7.5a.75.75 0 01.75-.75h3.75a.75.75 0 01.75.75v7.5m0-7.5h-7.5a.75.75 0 00-.75.75v7.5m7.5-7.5v-3a.75.75 0 00-.75-.75H3.75a.75.75 0 00-.75.75v3m9-.75l-9-4.5m9 4.5l-9-4.5m9 4.5v-3a.75.75 0 00-.75-.75H3.75a.75.75 0 00-.75.75v3m0 0l-3.75-1.5m15 1.5l3.75-1.5m-18.75 3l4.5-2.25m14.25 2.25l-4.5-2.25M3.75 12l4.5-2.25m6.75 2.25l4.5-2.25M12 3v2.25m6.75 1.5v-2.25M3.75 6.75v-2.25" />
+    </svg>
+);
+
+export const UserCircleIcon = (props: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
     </svg>
 );

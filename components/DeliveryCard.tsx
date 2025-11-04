@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import type { Delivery } from '../types';
 import { DeliveryStatus } from '../types';
@@ -13,7 +12,8 @@ import {
     MapPinIcon,
     SparklesIcon,
     ChevronDownIcon,
-    BuildingStorefrontIcon
+    BuildingStorefrontIcon,
+    UserCircleIcon
 } from './ui/Icons';
 import ConfirmationModal from './ui/ConfirmationModal';
 import ImageModal from './ui/ImageModal';
@@ -182,7 +182,17 @@ export default function DeliveryCard({ delivery, onUpdate, onDelete }: DeliveryC
             <div className="pl-1 pt-1">
                 <p><span className="font-semibold">Created:</span> {formatDateTime(delivery.createdAt)}</p>
                 {delivery.status === DeliveryStatus.DELIVERED && delivery.deliveredAt && (
-                    <p><span className="font-semibold text-green-600">Delivered:</span> {formatDateTime(delivery.updatedAt)}</p>
+                    <>
+                        <p><span className="font-semibold text-green-600">Delivered:</span> {formatDateTime(delivery.deliveredAt)}</p>
+                        {delivery.deliveredBy && (
+                            <div className="flex items-center gap-1.5 mt-1" title={`Delivered by ${delivery.deliveredBy}`}>
+                                <UserCircleIcon className="h-4 w-4 text-brand-text-light"/>
+                                <p className="text-xs text-brand-text-light truncate">
+                                    {delivery.deliveredBy}
+                                </p>
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
         </div>

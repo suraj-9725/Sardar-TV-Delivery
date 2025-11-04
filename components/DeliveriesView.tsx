@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { collection, onSnapshot, query, orderBy, addDoc, updateDoc, deleteDoc, doc, Timestamp } from 'firebase/firestore';
 import { db } from '../services/firebase';
@@ -80,6 +79,7 @@ export default function DeliveriesView() {
 
     if (data.status === DeliveryStatus.DELIVERED) {
       payload.deliveredAt = Timestamp.now();
+      payload.deliveredBy = user.email;
     }
     
     try {
