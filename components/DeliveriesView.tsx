@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { collection, onSnapshot, query, orderBy, addDoc, updateDoc, deleteDoc, doc, Timestamp } from 'firebase/firestore';
 import { db } from '../services/firebase';
 import type { Delivery } from '../types';
@@ -19,42 +19,22 @@ export default function DeliveriesView() {
   
   const { user } = useAuthContext();
   const isAdmin = user?.email === 'admin@admin.com';
-  const isInitialMount = useRef(true);
 
   useEffect(() => {
     const q = query(collection(db, 'deliveries'), orderBy('createdAt', 'desc'));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      if (!isInitialMount.current && Notification.permission === 'granted') {
-        querySnapshot.docChanges().forEach((change) => {
-          if (change.type === 'added') {
-            const newDelivery = change.doc.data() as Delivery;
-            if (newDelivery.lastUpdatedBy !== user?.email) {
-              const notificationTitle = 'New Delivery Added!';
-              const notificationOptions = {
-                body: `Product: ${newDelivery.productName} for ${newDelivery.customerName}.`,
-                icon: newDelivery.productImage || 'https://www.sardartvpvtltd.com/wp-content/uploads/2025/02/SARDAR-TV-LOGO-1980x929.png',
-                tag: change.doc.id,
-              };
-              new Notification(notificationTitle, notificationOptions);
-            }
-          }
-        });
-      }
-
       const deliveriesData = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
       } as Delivery));
       setDeliveries(deliveriesData);
       setLoading(false);
-
-      isInitialMount.current = false;
     }, (error) => {
       console.error("Error fetching deliveries:", error);
       setLoading(false);
     });
     return () => unsubscribe();
-  }, [user]);
+  }, []);
 
   const filteredDeliveries = useMemo(() => {
     return deliveries.filter(delivery => {
