@@ -19,7 +19,7 @@ export const useFCM = () => {
     }
 
     try {
-      console.log('Attempting to get FCM token with VAPID key...');
+      console.log('Attempting to get FCM token...');
       const currentToken = await getToken(messaging, { vapidKey: VAPID_KEY });
       if (currentToken) {
         console.log('FCM Token received:', currentToken);
