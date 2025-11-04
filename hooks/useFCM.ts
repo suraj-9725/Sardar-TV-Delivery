@@ -6,7 +6,7 @@ import { useAuthContext } from '../App';
 
 // IMPORTANT: Replace this with your VAPID key from the Firebase console.
 // Go to Project Settings > Cloud Messaging > Web configuration and click "Generate key pair".
-const VAPID_KEY = "BKEAer2C7f5kURbmpjXi8IuYIKEqhyRysMb6nlV0tpDXglWqrAooz4_bLWRcNlQ0RYsdfddLnERz_EdTsHtdO7U	";
+const VAPID_KEY = "BKEAer2C7f5kURbmpjXi8IuYIKEqhyRysMb6nlV0tpDXglWqrAooz4_bLWRcNlQ0RYsdfddLnERz_EdTsHtdO7U";
 
 export const useFCM = () => {
   const { user } = useAuthContext();
@@ -19,7 +19,7 @@ export const useFCM = () => {
     }
 
     try {
-      console.log('Attempting to get FCM token...');
+      console.log('Attempting to get FCM token with VAPID key...');
       const currentToken = await getToken(messaging, { vapidKey: VAPID_KEY });
       if (currentToken) {
         console.log('FCM Token received:', currentToken);
