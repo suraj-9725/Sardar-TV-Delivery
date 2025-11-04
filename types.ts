@@ -20,6 +20,7 @@ export enum Branch {
 
 export interface Delivery {
   id: string;
+  invoiceNumber: string;
   productName: string;
   customerName: string;
   address: string;

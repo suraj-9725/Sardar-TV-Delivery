@@ -38,10 +38,12 @@ export default function DeliveriesView() {
 
   const filteredDeliveries = useMemo(() => {
     return deliveries.filter(delivery => {
+      const lowercasedSearchTerm = searchTerm.toLowerCase();
       const matchesSearch = searchTerm === '' ||
-        delivery.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        delivery.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        delivery.address.toLowerCase().includes(searchTerm.toLowerCase());
+        (delivery.invoiceNumber && delivery.invoiceNumber.toLowerCase().includes(lowercasedSearchTerm)) ||
+        delivery.productName.toLowerCase().includes(lowercasedSearchTerm) ||
+        delivery.customerName.toLowerCase().includes(lowercasedSearchTerm) ||
+        delivery.address.toLowerCase().includes(lowercasedSearchTerm);
       
       const matchesStatus = statusFilter === 'All' || delivery.status === statusFilter;
       
@@ -99,7 +101,7 @@ export default function DeliveriesView() {
 
   return (
     <div className="space-y-6 pb-24">
-       <h1 className="text-3xl font-bold text-brand-text pt-6">Delivery Tracker</h1>
+       <h1 className="text-3xl font-bold text-brand-text pt-3">Delivery Tracker</h1>
        
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row gap-4">
@@ -109,7 +111,7 @@ export default function DeliveriesView() {
                 </span>
                 <input
                 type="text"
-                placeholder="Search by product, customer, or address..."
+                placeholder="Search by invoice, product, customer, or address..."
                 className="w-full pl-10 pr-4 py-2 bg-brand-surface border border-brand-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -121,6 +123,7 @@ export default function DeliveriesView() {
                 </span>
                 <input
                     type="date"
+                    placeholder="Enter date of delivery"
                     className="w-full px-4 py-2 bg-brand-surface border border-brand-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
                     value={dateFilter}
                     onChange={(e) => setDateFilter(e.target.value)}

@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react';
 import type { Delivery } from '../types';
 import { DeliveryStatus, Branch } from '../types';
@@ -22,6 +23,7 @@ const fileToBase64 = (file: File): Promise<string> => {
 
 export default function DeliveryFormModal({ isOpen, onClose, onSubmit, initialData }: DeliveryFormModalProps) {
   const [formData, setFormData] = useState({
+    invoiceNumber: initialData?.invoiceNumber || '',
     productName: initialData?.productName || '',
     customerName: initialData?.customerName || '',
     address: initialData?.address || '',
@@ -70,6 +72,7 @@ export default function DeliveryFormModal({ isOpen, onClose, onSubmit, initialDa
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={initialData?.id ? "Edit Delivery" : "Add New Delivery"}>
       <form onSubmit={handleSubmit} className="space-y-4">
+        <input type="text" name="invoiceNumber" placeholder="Invoice Number" value={formData.invoiceNumber} onChange={handleChange} required className={inputClass} />
         <input type="text" name="productName" placeholder="Product Name" value={formData.productName} onChange={handleChange} required className={inputClass} />
         
         <input type="text" name="customerName" placeholder="Customer Name" value={formData.customerName} onChange={handleChange} required className={inputClass} />

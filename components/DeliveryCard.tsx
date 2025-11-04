@@ -153,7 +153,10 @@ export default function DeliveryCard({ delivery, onUpdate, onDelete }: DeliveryC
                 )}
             </div>
             <div className="flex-1 space-y-2">
-                <h3 className="text-lg font-bold text-brand-text" title={delivery.productName}>{delivery.productName}</h3>
+                <h3 className="text-lg font-bold text-brand-text" title={delivery.productName}>
+                  {delivery.invoiceNumber && <span className="block text-xs font-semibold uppercase text-brand-text-light tracking-wider">Invoice #{delivery.invoiceNumber}</span>}
+                  {delivery.productName}
+                </h3>
                 <p className="text-sm text-brand-text font-medium">{delivery.customerName}</p>
                 <div className="flex items-start gap-2 text-sm text-brand-text-light">
                     <MapPinIcon className="h-4 w-4 mt-0.5 flex-shrink-0" />

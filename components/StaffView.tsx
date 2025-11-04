@@ -62,7 +62,7 @@ export default function StaffView() {
 
   return (
     <div className="relative pb-24">
-      <h1 className="text-3xl font-bold text-brand-text pt-6 pb-6">Staff Management</h1>
+      <h1 className="text-3xl font-bold text-brand-text pt-3 pb-6">Staff Management</h1>
       
       <div className="relative mb-6">
         <span className="absolute inset-y-0 left-0 flex items-center pl-3">
