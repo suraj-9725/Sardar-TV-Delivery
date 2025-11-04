@@ -27,7 +27,7 @@ export default function StaffCard({ staffMember, isAdmin, onDelete }: StaffCardP
         </div>
       </div>
       
-      <div className="mt-6 flex items-center justify-between">
+      <div className="mt-2 flex items-center justify-between">
         <p className="text-brand-text-light">{staffMember.phone}</p>
         <a 
             href={`tel:${staffMember.phone}`}

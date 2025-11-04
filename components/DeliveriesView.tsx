@@ -117,6 +117,7 @@ export default function DeliveriesView() {
             </div>
             <div className="relative">
                  <span className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                 <CalendarIcon className="h-5 w-5 text-brand-text-dark"/>
                 </span>
                 <input
                     type="date"
