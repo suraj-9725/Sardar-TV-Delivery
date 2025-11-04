@@ -1,0 +1,7 @@
+{
+  "name": "Sardar TV Delivery Hub",
+  "description": "An internal web application for Sardar TV staff to manage and track electronic product deliveries. It includes features for delivery management, staff management, and real-time updates powered by Firebase.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

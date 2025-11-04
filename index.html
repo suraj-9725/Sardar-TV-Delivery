@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sardar TV Delivery Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'brand-primary': '#2563eb', // blue-600
+              'brand-primary-light': '#dbeafe', // blue-100
+              'brand-text': '#1e293b', // slate-800
+              'brand-text-light': '#64748b', // slate-500
+              'brand-surface': '#ffffff', // white
+              'brand-bg': '#f1f5f9', // slate-100
+              'brand-border': '#e2e8f0', // slate-200
+              
+              // Status colors for text and borders
+              'status-new': '#3b82f6', // blue-500
+              'status-on-delivery': '#f59e0b', // amber-500
+              'status-pending': '#ef4444', // red-500
+              'status-delivered': '#22c55e', // green-500
+              
+              // Light status colors for backgrounds
+              'status-new-light': '#eff6ff', // blue-50
+              'status-on-delivery-light': '#fffbeb', // amber-50
+              'status-pending-light': '#fef2f2', // red-50
+              'status-delivered-light': '#f0fdf4', // green-50
+            },
+          },
+        },
+      }
+    </script>
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <style>
+      body { font-family: 'Inter', sans-serif; }
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "firebase/": "https://aistudiocdn.com/firebase@^12.5.0/",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0"
+  }
+}
+</script>
+</head>
+  <body class="bg-brand-bg antialiased">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
