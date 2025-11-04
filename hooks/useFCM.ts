@@ -19,20 +19,24 @@ export const useFCM = () => {
     }
 
     try {
+      console.log('Attempting to get FCM token...');
       const currentToken = await getToken(messaging, { vapidKey: VAPID_KEY });
       if (currentToken) {
-        console.log('FCM Token:', currentToken);
+        console.log('FCM Token received:', currentToken);
         const tokenRef = doc(db, 'fcmTokens', currentToken);
+        console.log('Attempting to save token to Firestore for user:', user.email);
         await setDoc(tokenRef, {
           uid: user.uid,
           email: user.email,
           createdAt: serverTimestamp(),
         }, { merge: true });
+        console.log('FCM token saved successfully to Firestore.');
       } else {
         console.log('No registration token available. Request permission to generate one.');
       }
     } catch (err) {
-      console.error('An error occurred while retrieving token. ', err);
+      console.error('An error occurred while retrieving or saving the token.', err);
+      console.error('This could be due to an invalid VAPID key or, more likely, restrictive Firestore security rules.');
     }
   };
   
