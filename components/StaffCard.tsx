@@ -27,13 +27,13 @@ export default function StaffCard({ staffMember, isAdmin, onDelete }: StaffCardP
         </div>
       </div>
       
-      <div className="mt-1 flex items-center justify-between">
+      <div className="mt-6 flex items-center justify-between">
         <p className="text-brand-text-light">{staffMember.phone}</p>
         <a 
             href={`tel:${staffMember.phone}`}
             className="inline-flex items-center justify-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
         >
-            <PhoneIcon className="w-6 h-5 mr-1.5" />
+            <PhoneIcon className="w-4 h-4 mr-1.5" />
             Call
         </a>
       </div>
