@@ -1,6 +1,7 @@
 import { getToken } from 'firebase/messaging';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db, messaging as messagingPromise } from '../services/firebase';
+import { FirebaseError } from 'firebase/app';
 
 // IMPORTANT: Replace this with your actual VAPID key from the Firebase Console.
 // Go to Project Settings > Cloud Messaging > Web configuration > Web Push certificates
@@ -48,7 +49,11 @@ export const requestNotificationPermission = async (uid: string) => {
   } catch (error) {
     console.error('An error occurred during notification setup.', error);
     
-    if (error instanceof Error && error.message.includes('404')) {
+    if (error instanceof FirebaseError && error.code === 'permission-denied') {
+        console.error(
+            '--> Firestore Permission Error: The security rules for your database are blocking the app from saving the notification token. Please ensure your Firestore rules allow authenticated users to write to the `fcmTokens` collection.'
+        );
+    } else if (error instanceof Error && error.message.includes('404')) {
         console.error(
             '--> Service Worker registration failed: file not found (404).'
         );
