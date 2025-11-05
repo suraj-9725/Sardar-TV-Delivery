@@ -18,39 +18,53 @@ export const requestNotificationPermission = async (uid: string) => {
   }
 
   try {
-    // Manually register the service worker from the root scope
+    console.log("⏳ [Notification Setup] Registering service worker...");
     const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-    console.log('Service Worker registered successfully with scope:', registration.scope);
+    console.log('✅ [Notification Setup] Service Worker registered successfully with scope:', registration.scope);
 
     const permission = await Notification.requestPermission();
     if (permission === 'granted') {
-      console.log('Notification permission granted.');
+      console.log('✅ [Notification Setup] Notification permission granted.');
+      console.log('⏳ [Notification Setup] Requesting FCM token...');
       
-      // Pass the explicit registration to getToken
       const currentToken = await getToken(messaging, { 
           vapidKey: VAPID_KEY,
           serviceWorkerRegistration: registration,
       });
 
       if (currentToken) {
-        console.log('FCM Token:', currentToken);
-        // Save the token to Firestore to be used for sending notifications
-        await setDoc(doc(db, 'fcmTokens', currentToken), {
-          uid: uid,
-          createdAt: serverTimestamp(),
-        });
+        console.log('✅ [Notification Setup] FCM Token received:', currentToken);
+        console.log('⏳ [Notification Setup] Attempting to save token to Firestore...');
+        try {
+          // Save the token to Firestore to be used for sending notifications
+          await setDoc(doc(db, 'fcmTokens', currentToken), {
+            uid: uid,
+            createdAt: serverTimestamp(),
+          });
+          console.log('✅ [Notification Setup] Token saved to Firestore successfully!');
+        } catch (error) {
+          console.error('❌ [Notification Setup] Failed to save token to Firestore.', error);
+          // Check for specific Firestore permission errors
+          if (typeof error === 'object' && error !== null && 'code' in error && (error as {code: string}).code === 'permission-denied') {
+            console.error(
+                '🚨 CRITICAL: Firestore Security Rules are blocking the token from being saved.',
+                'Please ensure your rules allow authenticated users to write to the `fcmTokens` collection.',
+                'Example Rule: `match /fcmTokens/{token} { allow write: if request.auth != null; }`'
+            );
+          }
+        }
       } else {
-        console.log('No registration token available. Request permission to generate one.');
+        console.warn('⚠️ [Notification Setup] No registration token available. This can happen if the user denies permission or closes the prompt.');
       }
     } else {
-      console.log('Unable to get permission to notify.');
+      console.log('ℹ️ [Notification Setup] User denied notification permission.');
     }
   } catch (error) {
-    console.error('An error occurred during notification setup.', error);
+    console.error('❌ [Notification Setup] An unexpected error occurred.', error);
     
     if (error instanceof Error && error.message.includes('404')) {
         console.error(
-            '--> Service Worker registration failed: file not found (404).'
+            '🚨 Service Worker registration failed: file not found (404).'
         );
         /*
          * ####################################################################################
