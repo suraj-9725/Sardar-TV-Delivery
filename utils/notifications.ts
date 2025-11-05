@@ -47,13 +47,37 @@ export const requestNotificationPermission = async (uid: string) => {
     }
   } catch (error) {
     console.error('An error occurred during notification setup.', error);
-    // Provide a more specific error message if the service worker file is not found.
+    
     if (error instanceof Error && error.message.includes('404')) {
         console.error(
-            '--> Service Worker registration failed: file not found (404).\n' +
-            '--> This is a file serving issue, not a code issue.\n' +
-            '--> SOLUTION: Ensure `firebase-messaging-sw.js` is in the root of your public/deployment directory, next to `index.html`.'
+            '--> Service Worker registration failed: file not found (404).'
         );
+        /*
+         * ####################################################################################
+         * # IMPORTANT NOTE FOR THE DEVELOPER
+         * ####################################################################################
+         *
+         * This 404 error means your web server is not serving the 'firebase-messaging-sw.js' 
+         * file from the root directory of your website.
+         *
+         * THIS IS A DEPLOYMENT CONFIGURATION ISSUE, NOT A CODE BUG.
+         *
+         * To fix this, you must ensure that 'firebase-messaging-sw.js' is placed in a
+         * 'public' directory that your deployment service (like Vercel, Netlify, etc.) 
+         * serves at the root level.
+         *
+         * --- ACTION REQUIRED ---
+         *
+         * 1. Create a folder named 'public' at the root of your project.
+         * 2. Move 'firebase-messaging-sw.js' into that new 'public' folder.
+         * 3. Most deployment platforms will automatically detect the 'public' folder 
+         *    and serve its contents. After deploying this change, the file will be
+         *    correctly located.
+         *
+         * The file MUST be accessible at `https://your-domain.com/firebase-messaging-sw.js`.
+         *
+         * ####################################################################################
+         */
     }
   }
 };
