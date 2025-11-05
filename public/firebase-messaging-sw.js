@@ -1,7 +1,8 @@
 // This service worker handles background push notifications.
 // It uses the compat libraries for broader browser support without a bundler.
-importScripts("https://aistudiocdn.com/firebase@12.5.0/firebase-app-compat.js");
-importScripts("https://aistudiocdn.com/firebase@12.5.0/firebase-messaging-compat.js");
+// Switched to the official Firebase CDN for reliability.
+importScripts("https://www.gstatic.com/firebasejs/12.5.0/firebase-app-compat.js");
+importScripts("https://www.gstatic.com/firebasejs/12.5.0/firebase-messaging-compat.js");
 
 // NOTE: This config is duplicated from the main app.
 // It's necessary because service workers run in a separate context.
