@@ -1,3 +1,4 @@
+
 import { getToken } from 'firebase/messaging';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db, messaging as messagingPromise } from '../services/firebase';
@@ -21,41 +22,44 @@ export const requestNotificationPermission = async (uid: string) => {
   try {
     // Manually register the service worker from the root scope
     const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-    console.log('Service Worker registered successfully with scope:', registration.scope);
+    console.log('✅ [Notification Setup] Step 1: Service Worker registered successfully with scope:', registration.scope);
 
     const permission = await Notification.requestPermission();
     if (permission === 'granted') {
-      console.log('Notification permission granted.');
+      console.log('✅ [Notification Setup] Step 2: Notification permission granted by user.');
       
-      // Pass the explicit registration to getToken
+      console.log('🔄 [Notification Setup] Step 3: Attempting to retrieve FCM token...');
       const currentToken = await getToken(messaging, { 
           vapidKey: VAPID_KEY,
           serviceWorkerRegistration: registration,
       });
 
       if (currentToken) {
-        console.log('FCM Token:', currentToken);
-        // Save the token to Firestore to be used for sending notifications
+        console.log('✅ [Notification Setup] Step 4: FCM Token retrieved successfully:', currentToken);
+        
+        console.log('🔄 [Notification Setup] Step 5: Attempting to save token to Firestore...');
         await setDoc(doc(db, 'fcmTokens', currentToken), {
           uid: uid,
           createdAt: serverTimestamp(),
         });
+        console.log('✅ [Notification Setup] Step 6: Token saved to Firestore successfully!');
+
       } else {
-        console.log('No registration token available. Request permission to generate one.');
+        console.error('❌ [Notification Setup] Step 4 Failed: No registration token available. This can happen if the user has denied permissions in the past or if there is a configuration issue with your VAPID key or Firebase project.');
       }
     } else {
-      console.log('Unable to get permission to notify.');
+      console.warn('🟡 [Notification Setup] Step 2 Failed: Unable to get permission to notify. User status:', permission);
     }
   } catch (error) {
-    console.error('An error occurred during notification setup.', error);
+    console.error('❌ [Notification Setup] An unexpected error occurred. Full error object:', error);
     
     if (error instanceof FirebaseError && error.code === 'permission-denied') {
         console.error(
-            '--> Firestore Permission Error: The security rules for your database are blocking the app from saving the notification token. Please ensure your Firestore rules allow authenticated users to write to the `fcmTokens` collection.'
+            '--> 🚨 Firestore Permission Error: The security rules for your database are blocking the app from saving the notification token. Please ensure your Firestore rules allow authenticated users to write to the `fcmTokens` collection.'
         );
     } else if (error instanceof Error && error.message.includes('404')) {
         console.error(
-            '--> Service Worker registration failed: file not found (404).'
+            '--> 🚨 Service Worker registration failed: file not found (404).'
         );
         /*
          * ####################################################################################
