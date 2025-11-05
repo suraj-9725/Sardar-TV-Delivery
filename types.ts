@@ -32,7 +32,6 @@ export interface Delivery {
   updatedAt: Timestamp;
   deliveredAt?: Timestamp;
   deliveredBy?: string;
-  createdByUid?: string;
 }
 
 export interface Staff {

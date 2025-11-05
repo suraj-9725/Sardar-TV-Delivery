@@ -54,15 +54,14 @@ export default function DeliveriesView() {
     });
   }, [deliveries, searchTerm, statusFilter, dateFilter]);
 
-  const handleAddDelivery = async (deliveryData: Omit<Delivery, 'id' | 'createdAt' | 'updatedAt' | 'lastUpdatedBy' | 'createdByUid'>) => {
-    if (!user?.email || !user.uid) return;
+  const handleAddDelivery = async (deliveryData: Omit<Delivery, 'id' | 'createdAt' | 'updatedAt' | 'lastUpdatedBy'>) => {
+    if (!user?.email) return;
     try {
       await addDoc(collection(db, "deliveries"), {
         ...deliveryData,
         createdAt: Timestamp.now(),
         updatedAt: Timestamp.now(),
-        lastUpdatedBy: user.email,
-        createdByUid: user.uid,
+        lastUpdatedBy: user.email
       });
       setIsModalOpen(false);
     } catch (error) {
