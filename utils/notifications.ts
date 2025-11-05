@@ -1,4 +1,3 @@
-
 import { getToken } from 'firebase/messaging';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db, messaging as messagingPromise } from '../services/firebase';
@@ -11,12 +10,13 @@ const VAPID_KEY = 'BKEAer2C7f5kURbmpjXi8IuYIKEqhyRysMb6nlV0tpDXglWqrAooz4_bLWRcN
 /**
  * Requests permission to show notifications and saves the FCM token if granted.
  * @param uid The user's unique ID.
+ * @returns The final notification permission status.
  */
-export const requestNotificationPermission = async (uid: string) => {
+export const requestNotificationPermission = async (uid: string): Promise<NotificationPermission> => {
   const messaging = await messagingPromise;
   if (!messaging || !('serviceWorker' in navigator)) {
     console.log("Firebase Messaging or Service Workers are not supported in this browser.");
-    return;
+    return 'denied';
   }
 
   try {
@@ -50,6 +50,7 @@ export const requestNotificationPermission = async (uid: string) => {
     } else {
       console.warn('🟡 [Notification Setup] Step 2 Failed: Unable to get permission to notify. User status:', permission);
     }
+    return permission;
   } catch (error) {
     console.error('❌ [Notification Setup] An unexpected error occurred. Full error object:', error);
     
@@ -88,5 +89,6 @@ export const requestNotificationPermission = async (uid: string) => {
          * ####################################################################################
          */
     }
+    return 'denied';
   }
 };
