@@ -46,6 +46,14 @@ export const requestNotificationPermission = async (uid: string) => {
       console.log('Unable to get permission to notify.');
     }
   } catch (error) {
-    console.error('An error occurred during notification setup. This could be due to the `firebase-messaging-sw.js` file not being in the root of your public directory, or a non-HTTPS connection.', error);
+    console.error('An error occurred during notification setup.', error);
+    // Provide a more specific error message if the service worker file is not found.
+    if (error instanceof Error && error.message.includes('404')) {
+        console.error(
+            '--> Service Worker registration failed: file not found (404).\n' +
+            '--> This is a file serving issue, not a code issue.\n' +
+            '--> SOLUTION: Ensure `firebase-messaging-sw.js` is in the root of your public/deployment directory, next to `index.html`.'
+        );
+    }
   }
 };
