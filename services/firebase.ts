@@ -2,6 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getMessaging, isSupported } from "firebase/messaging";
 
 // It is assumed that these environment variables are configured in the deployment environment.
 const firebaseConfig = {
@@ -18,4 +19,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-export { auth, db };
+// Initialize messaging only if the browser supports it
+const messaging = isSupported().then(supported => supported ? getMessaging(app) : null);
+
+export { auth, db, messaging };

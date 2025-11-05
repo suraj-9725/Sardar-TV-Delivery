@@ -1,4 +1,4 @@
-import React, { useState, createContext, useContext } from 'react';
+import React, { useState, createContext, useContext, useEffect } from 'react';
 import { useAuth } from './hooks/useAuth';
 import LoginPage from './components/LoginPage';
 import Header from './components/Header';
@@ -6,6 +6,7 @@ import DeliveriesView from './components/DeliveriesView';
 import StaffView from './components/StaffView';
 import { Spinner } from './components/ui/Spinner';
 import type { User } from './types';
+import { requestNotificationPermission } from './utils/notifications';
 
 type View = 'deliveries' | 'staff';
 
@@ -19,6 +20,14 @@ export const useAuthContext = () => useContext(AuthContext);
 export default function App() {
   const { user, loading, logout } = useAuth();
   const [currentView, setCurrentView] = useState<View>('deliveries');
+
+  useEffect(() => {
+    if (user) {
+      // Once the user is logged in, request permission for notifications.
+      // This is non-blocking.
+      requestNotificationPermission(user.uid);
+    }
+  }, [user]);
 
   if (loading) {
     return (

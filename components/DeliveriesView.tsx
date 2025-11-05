@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { collection, onSnapshot, query, orderBy, addDoc, updateDoc, deleteDoc, doc, Timestamp } from 'firebase/firestore';
+import { collection, onSnapshot, query, orderBy, addDoc, updateDoc, deleteDoc, doc, Timestamp, serverTimestamp } from 'firebase/firestore';
 import { db } from '../services/firebase';
 import type { Delivery } from '../types';
 import { DeliveryStatus } from '../types';
@@ -57,13 +57,22 @@ export default function DeliveriesView() {
   const handleAddDelivery = async (deliveryData: Omit<Delivery, 'id' | 'createdAt' | 'updatedAt' | 'lastUpdatedBy'>) => {
     if (!user?.email) return;
     try {
-      await addDoc(collection(db, "deliveries"), {
+      const deliveryDocRef = await addDoc(collection(db, "deliveries"), {
         ...deliveryData,
         createdAt: Timestamp.now(),
         updatedAt: Timestamp.now(),
         lastUpdatedBy: user.email
       });
       setIsModalOpen(false);
+
+      // Add a notification to a queue. A backend function would listen to this collection.
+      await addDoc(collection(db, 'notifications_queue'), {
+          title: 'New Delivery Added!',
+          body: `📦 ${deliveryData.productName} for ${deliveryData.customerName} is now pending.`,
+          createdAt: serverTimestamp(),
+          deliveryId: deliveryDocRef.id,
+      });
+
     } catch (error) {
       console.error("Error adding delivery: ", error);
     }
