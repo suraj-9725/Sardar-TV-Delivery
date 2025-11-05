@@ -12,17 +12,25 @@ const VAPID_KEY = 'BKEAer2C7f5kURbmpjXi8IuYIKEqhyRysMb6nlV0tpDXglWqrAooz4_bLWRcN
  */
 export const requestNotificationPermission = async (uid: string) => {
   const messaging = await messagingPromise;
-  if (!messaging) {
-    console.log("Firebase Messaging is not supported in this browser.");
+  if (!messaging || !('serviceWorker' in navigator)) {
+    console.log("Firebase Messaging or Service Workers are not supported in this browser.");
     return;
   }
 
   try {
+    // Manually register the service worker from the root scope
+    const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+    console.log('Service Worker registered successfully with scope:', registration.scope);
+
     const permission = await Notification.requestPermission();
     if (permission === 'granted') {
       console.log('Notification permission granted.');
       
-      const currentToken = await getToken(messaging, { vapidKey: VAPID_KEY });
+      // Pass the explicit registration to getToken
+      const currentToken = await getToken(messaging, { 
+          vapidKey: VAPID_KEY,
+          serviceWorkerRegistration: registration,
+      });
 
       if (currentToken) {
         console.log('FCM Token:', currentToken);
@@ -38,6 +46,6 @@ export const requestNotificationPermission = async (uid: string) => {
       console.log('Unable to get permission to notify.');
     }
   } catch (error) {
-    console.error('An error occurred while getting the notification token. ', error);
+    console.error('An error occurred during notification setup. This could be due to the `firebase-messaging-sw.js` file not being in the root of your public directory, or a non-HTTPS connection.', error);
   }
 };
