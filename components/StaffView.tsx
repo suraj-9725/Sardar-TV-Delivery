@@ -8,7 +8,6 @@ import StaffCard from './StaffCard';
 import StaffFormModal from './StaffFormModal';
 import { Spinner } from './ui/Spinner';
 import { PlusIcon, SearchIcon } from './ui/Icons';
-import NotificationTester from './NotificationTester';
 
 export default function StaffView() {
   const [staff, setStaff] = useState<Staff[]>([]);
@@ -65,9 +64,7 @@ export default function StaffView() {
     <div className="relative pb-24">
       <h1 className="text-3xl font-bold text-brand-text pt-3 pb-6">Staff Management</h1>
       
-      {isAdmin && <NotificationTester />}
-
-      <div className="relative my-6">
+      <div className="relative mb-6">
         <span className="absolute inset-y-0 left-0 flex items-center pl-3">
             <SearchIcon className="h-5 w-5 text-brand-text-light" />
         </span>

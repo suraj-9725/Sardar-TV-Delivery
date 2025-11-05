@@ -95,37 +95,3 @@ export const requestNotificationPermission = async (uid: string) => {
     }
   }
 };
-
-
-/**
- * Retrieves the current FCM token if one exists and permission is granted.
- * @returns The FCM token string or null.
- */
-export const getCurrentToken = async (): Promise<string | null> => {
-    const messaging = await messagingPromise;
-    if (!messaging) {
-        console.log("Firebase Messaging is not supported in this browser.");
-        return null;
-    }
-
-    const registration = await navigator.serviceWorker.getRegistration('/firebase-messaging-sw.js').catch(err => {
-        console.error("Could not get service worker registration.", err);
-        return null;
-    });
-
-    if (!registration) {
-        console.log("No service worker registration found. Cannot get token.");
-        return null;
-    }
-    
-    try {
-        const token = await getToken(messaging, {
-            vapidKey: VAPID_KEY,
-            serviceWorkerRegistration: registration,
-        });
-        return token || null;
-    } catch(err) {
-        console.error("An error occurred while retrieving token.", err);
-        return null;
-    }
-};
